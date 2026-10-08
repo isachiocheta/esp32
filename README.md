@@ -1,113 +1,69 @@
-# ESP32 — LED piscando com PlatformIO
+# ESP32 — Teste inicial com LED
 
-Projeto introdutório para estudar a estrutura de um programa para **ESP32** usando o framework **Arduino** e a extensão **PlatformIO** no Visual Studio Code. O programa em `src/main.cpp` faz o LED conectado ao **GPIO 2** acender e apagar em intervalos de um segundo.
+## Sobre o projeto
 
-> Em muitas placas ESP32 DevKit o LED interno está ligado ao GPIO 2. Caso o LED da sua placa não pisque, conecte um LED externo ao GPIO 2 ou consulte o esquema/modelo da placa para descobrir o pino do LED interno.
+Este projeto básico foi desenvolvido como um primeiro contato com o ESP32, o framework Arduino e a extensão PlatformIO IDE no Visual Studio Code.
 
-## O que este projeto ensina
+A implementação realiza um teste simples de saída digital: um LED conectado ao GPIO 2 é ligado e desligado continuamente, com intervalos de um segundo. O objetivo foi verificar a configuração do ambiente, a compilação do programa e o envio do código para a placa.
 
-- Estrutura básica de um programa para ESP32 com Arduino.
-- Uso dos métodos `setup()` e `loop()`.
-- Configuração de um pino como saída digital.
-- Acionamento de um LED com nível lógico alto e baixo.
-- Pausa da execução com `delay()`.
-- Compilação, envio e monitoramento serial pelo PlatformIO.
+## Funcionalidade
 
-## Funcionamento do código
+Após o ESP32 ser ligado ou reiniciado, o programa:
 
-Arquivo: `src/main.cpp`
+1. Configura o GPIO 2 como saída digital.
+2. Define o pino como nível lógico alto, acendendo o LED.
+3. Aguarda um segundo.
+4. Define o pino como nível lógico baixo, apagando o LED.
+5. Aguarda mais um segundo e repete o ciclo.
+
+O resultado é um LED que permanece um segundo aceso e um segundo apagado.
+
+> O GPIO do LED interno pode variar conforme o modelo da placa. Neste projeto foi utilizado o GPIO 2, conforme a configuração adotada para o teste.
+
+## Código principal
+
+O programa está localizado em `src/main.cpp`:
 
 ```cpp
 #include <Arduino.h>
+
 #define pino_led 2
 
-void setup(){
-   pinMode(pino_led, OUTPUT);
+void setup() {
+    pinMode(pino_led, OUTPUT);
 }
 
-void loop(){
-   digitalWrite(pino_led, HIGH);
-   delay(1000);
-   digitalWrite(pino_led, LOW);
-   delay(1000);
+void loop() {
+    digitalWrite(pino_led, HIGH);
+    delay(1000);
+
+    digitalWrite(pino_led, LOW);
+    delay(1000);
 }
 ```
 
-### Explicação linha a linha
+### Organização do programa
 
-| Trecho | O que faz |
-| --- | --- |
-| `#include <Arduino.h>` | Inclui as funções do framework Arduino, como `pinMode`, `digitalWrite` e `delay`. |
-| `#define pino_led 2` | Cria o nome `pino_led` para representar o GPIO 2. Isso evita repetir o número do pino no código. |
-| `void setup()` | Função executada **uma única vez**, logo após o ESP32 ligar ou reiniciar. É usada para configurações iniciais. |
-| `pinMode(pino_led, OUTPUT)` | Define o GPIO 2 como **saída**, permitindo que ele envie sinal elétrico ao LED. |
-| `void loop()` | Função executada repetidamente enquanto a placa estiver ligada. Quando chega ao fim, recomeça automaticamente. |
-| `digitalWrite(pino_led, HIGH)` | Coloca o pino em nível lógico alto (aproximadamente 3,3 V), acendendo o LED na ligação usual. |
-| `delay(1000)` | Pausa o programa por 1.000 milissegundos, isto é, 1 segundo. |
-| `digitalWrite(pino_led, LOW)` | Coloca o pino em nível lógico baixo (0 V), apagando o LED. |
-| Segundo `delay(1000)` | Mantém o LED apagado por 1 segundo antes de o ciclo recomeçar. |
+- `#include <Arduino.h>` disponibiliza as funções do framework Arduino utilizadas no código.
+- `pino_led` representa o GPIO 2, usado para controlar o LED.
+- `setup()` configura o pino uma única vez, quando a placa inicia.
+- `pinMode(pino_led, OUTPUT)` define o pino como saída.
+- `loop()` executa repetidamente a sequência de acionamento.
+- `digitalWrite()` altera o estado lógico do pino.
+- `delay(1000)` mantém cada estado por 1.000 milissegundos, ou um segundo.
 
-Assim, o LED fica **1 segundo aceso** e **1 segundo apagado**, formando um ciclo de 2 segundos.
+## Tecnologias e ferramentas
 
-## Conceitos iniciais importantes do ESP32
+- **Placa:** ESP32 Dev Module
+- **Framework:** Arduino
+- **Plataforma:** Espressif32
+- **IDE:** Visual Studio Code
+- **Extensão:** PlatformIO IDE
+- **Linguagem:** C++
 
-### GPIO
+## Configuração do PlatformIO
 
-GPIO significa *General Purpose Input/Output* (entrada/saída de uso geral). São pinos que podem ler sinais ou controlar componentes externos. Neste projeto, o GPIO 2 é usado como **saída** para controlar um LED.
-
-### Estados digitais
-
-- `HIGH`: nível lógico alto; no ESP32 equivale normalmente a cerca de **3,3 V**.
-- `LOW`: nível lógico baixo; equivale a **0 V**.
-- `OUTPUT`: modo de operação para enviar sinais pelo pino.
-- `INPUT`: modo de operação para ler sinais, por exemplo, de um botão ou sensor.
-
-### `setup()` e `loop()`
-
-No framework Arduino, estas duas funções são obrigatórias:
-
-1. `setup()` roda uma vez para preparar a placa.
-2. `loop()` roda infinitamente e contém o comportamento contínuo do projeto.
-
-## Estrutura do projeto
-
-```text
-esp32/
-├── src/
-│   └── main.cpp          # Código principal do ESP32
-├── include/              # Arquivos de cabeçalho criados pelo projeto
-├── lib/                  # Bibliotecas próprias do projeto
-├── test/                 # Testes automatizados, se houver
-├── platformio.ini        # Configurações do PlatformIO
-└── .gitignore            # Arquivos que não devem ser enviados ao Git
-```
-
-## Configuração do PlatformIO no VS Code (Linux)
-
-### 1. Instalar o Visual Studio Code
-
-Caso ainda não tenha o VS Code instalado, baixe-o pelo site oficial ou use o gerenciador de pacotes da sua distribuição Linux.
-
-### 2. Instalar a extensão PlatformIO IDE
-
-1. Abra o VS Code.
-2. Clique no ícone de **Extensões** na barra lateral esquerda, ou pressione `Ctrl + Shift + X`.
-3. Pesquise por **PlatformIO IDE**.
-4. Escolha a extensão publicada por **PlatformIO** e clique em **Install**.
-5. Aguarde a instalação dos componentes necessários e reinicie o VS Code se ele solicitar.
-
-### 3. Abrir este projeto
-
-1. No VS Code, selecione **File → Open Folder...**.
-2. Escolha a pasta `esp32` — a mesma que contém o arquivo `platformio.ini`.
-3. Aguarde o PlatformIO reconhecer e preparar o ambiente `esp32dev`.
-4. Abra `src/main.cpp` para ver ou alterar o código.
-
-> Abra a **pasta do projeto**, não apenas o arquivo `main.cpp`. O PlatformIO precisa encontrar o arquivo `platformio.ini`.
-
-## Configuração usada no PlatformIO
-
-Arquivo: `platformio.ini`
+O arquivo `platformio.ini` contém as configurações usadas para compilar e enviar o programa:
 
 ```ini
 [env:esp32dev]
@@ -117,129 +73,55 @@ framework = arduino
 monitor_speed = 115200
 ```
 
-| Configuração | Significado |
-| --- | --- |
-| `[env:esp32dev]` | Nome do ambiente de compilação. |
-| `platform = espressif32` | Usa a plataforma dos microcontroladores ESP32 da Espressif. |
-| `board = esp32dev` | Seleciona a placa genérica ESP32 Dev Module. |
-| `framework = arduino` | Permite programar com as funções e estrutura do Arduino. |
-| `monitor_speed = 115200` | Define a velocidade do Monitor Serial em 115200 bauds. |
+- `env:esp32dev`: identifica o ambiente de desenvolvimento do projeto.
+- `platform = espressif32`: seleciona a plataforma para placas ESP32.
+- `board = esp32dev`: define a placa como ESP32 Dev Module.
+- `framework = arduino`: utiliza o framework Arduino.
+- `monitor_speed = 115200`: configura a velocidade padrão do Monitor Serial.
 
-## Como compilar e enviar o programa pela interface do VS Code
+## Estrutura do projeto
 
-1. Conecte o ESP32 ao computador com um **cabo USB que transmita dados**. Alguns cabos servem apenas para carregamento.
-2. Abra a pasta do projeto no VS Code.
-3. No rodapé do VS Code, localize os ícones do PlatformIO:
-   - ✓: **Build** — compila o projeto;
-   - →: **Upload** — compila e envia o programa para a placa;
-   - tomada: **Serial Monitor** — abre a comunicação serial.
-4. Primeiro clique em **Build** para verificar se não há erros de compilação.
-5. Clique em **Upload** para gravar o programa no ESP32.
-6. Aguarde a mensagem de sucesso, normalmente semelhante a `SUCCESS`.
-7. Após o reinício da placa, o LED deverá piscar.
-
-Se o upload ficar parado em `Connecting...`, mantenha pressionado o botão **BOOT** da placa, inicie o upload e solte o botão quando a gravação começar.
-
-## Comandos Linux pelo terminal
-
-Abra o terminal na pasta do projeto. Exemplo:
-
-```bash
-cd ~/Documentos/PlatformIO/Projects/esp32
+```text
+esp32/
+├── src/
+│   └── main.cpp       # Código principal: acionamento do LED
+├── include/           # Arquivos de cabeçalho do projeto
+├── lib/               # Bibliotecas locais do projeto
+├── test/              # Espaço reservado para testes
+├── platformio.ini     # Configurações de compilação e placa
+└── .gitignore         # Arquivos e pastas ignorados pelo Git
 ```
 
-> Ajuste o caminho se você tiver salvo o projeto em outra pasta.
+## Compilação e upload
 
-### Compilar
+O projeto pode ser compilado e enviado à placa pelos comandos do PlatformIO, executados no terminal dentro da pasta que contém `platformio.ini`.
+
+Para compilar:
 
 ```bash
 pio run
 ```
 
-Esse comando verifica o código e gera o firmware, mas **não envia** nada à placa.
+Esse comando compila o código e verifica se o projeto está pronto para gerar o firmware.
 
-### Enviar para o ESP32
-
-```bash
-pio run --target upload
-```
-
-O PlatformIO compila (se necessário) e grava o firmware no ESP32.
-
-### Abrir o Monitor Serial
-
-```bash
-pio device monitor
-```
-
-Para sair do Monitor Serial, pressione `Ctrl + C`.
-
-### Compilar, enviar e abrir o monitor
-
-Execute primeiro o upload e, após terminar, abra o monitor:
-
-```bash
-pio run --target upload
-pio device monitor
-```
-
-Neste projeto não há `Serial.begin()` nem mensagens sendo impressas; portanto, o Monitor Serial ficará sem texto. Ele será útil quando você adicionar comunicação serial em estudos futuros.
-
-### Descobrir a porta da placa
-
-Com o ESP32 conectado, execute:
-
-```bash
-ls /dev/ttyUSB* /dev/ttyACM*
-```
-
-A placa costuma aparecer como `/dev/ttyUSB0` ou `/dev/ttyACM0`. Para definir a porta manualmente no `platformio.ini`, adicione, por exemplo:
-
-```ini
-upload_port = /dev/ttyUSB0
-```
-
-Depois use novamente:
+Para enviar o programa ao ESP32:
 
 ```bash
 pio run --target upload
 ```
 
-## Permissão para acessar a porta USB no Linux
+Esse comando compila o projeto, se necessário, e envia o firmware para o ESP32 conectado ao computador.
 
-Se aparecer erro de permissão, como `Permission denied` ao acessar `/dev/ttyUSB0`, adicione seu usuário ao grupo `dialout`:
+Também é possível realizar essas operações pela interface do PlatformIO no VS Code, usando as opções **Build** e **Upload**.
 
-```bash
-sudo usermod -aG dialout $USER
-```
+## Monitor Serial
 
-Depois, **encerre a sessão do Linux e entre novamente** (ou reinicie o computador) para a alteração valer. Em seguida, confirme com:
+A configuração do projeto define a velocidade do Monitor Serial como `115200` bauds. O código atual não inicializa a comunicação serial nem envia mensagens; portanto, o Monitor Serial não apresenta informações durante a execução. A configuração permanece disponível para futuras alterações no projeto.
 
-```bash
-groups
-```
+## Resultado
 
-O grupo `dialout` deve aparecer na lista.
+O teste implementa o acionamento intermitente do LED no GPIO 2 e valida o fluxo inicial de desenvolvimento para ESP32 com PlatformIO: organização do projeto, configuração da placa, compilação e upload do programa.
 
-## Possíveis problemas no upload
+## Possíveis extensões
 
-| Problema | O que verificar |
-| --- | --- |
-| A placa não aparece em `/dev/ttyUSB0` | Troque o cabo USB; muitos cabos carregam, mas não transferem dados. Teste outra porta USB. |
-| `Permission denied` | Execute o comando para adicionar seu usuário ao grupo `dialout` e faça login novamente. |
-| Upload parado em `Connecting...` | Segure **BOOT** enquanto inicia o upload e solte quando ele começar. |
-| LED não pisca | Verifique se sua placa usa o LED interno no GPIO 2. Se necessário, use um LED externo com resistor adequado. |
-| Porta ocupada | Feche o Monitor Serial e qualquer outro programa que esteja usando a porta antes do upload. |
-| Placa diferente | Altere `board = esp32dev` no `platformio.ini` somente após confirmar o modelo correto da sua placa. |
-
-## Próximos estudos sugeridos
-
-- Controlar um LED externo usando resistor de 220 Ω a 1 kΩ.
-- Ler um botão com `pinMode(..., INPUT_PULLUP)` e `digitalRead()`.
-- Enviar mensagens ao computador com `Serial.begin(115200)` e `Serial.println()`.
-- Usar PWM para controlar o brilho de um LED.
-- Conectar o ESP32 ao Wi-Fi.
-
----
-
-Projeto criado para estudo dos conceitos iniciais do ESP32 com PlatformIO e framework Arduino.
+A partir desta implementação, o projeto pode ser ampliado para incluir outros testes, como leitura de botão, controle de brilho do LED, comunicação pelo Monitor Serial, leitura de sensores ou conexão Wi-Fi.
